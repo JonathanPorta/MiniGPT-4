@@ -115,10 +115,10 @@ with gr.Blocks() as demo:
 
     with gr.Row():
         with gr.Column(scale=0.5):
-            image = gr.Image(type="pil")
+            image = gr.Image(type="pil", interactive=True, label="Image")
             upload_button = gr.Button(value="Upload & Start Chat", interactive=True, variant="primary")
             clear = gr.Button("Restart")
-            
+
             num_beams = gr.Slider(
                 minimum=1,
                 maximum=10,
@@ -127,7 +127,7 @@ with gr.Blocks() as demo:
                 interactive=True,
                 label="beam search numbers)",
             )
-            
+
             temperature = gr.Slider(
                 minimum=0.1,
                 maximum=2.0,
@@ -141,10 +141,10 @@ with gr.Blocks() as demo:
             chat_state = gr.State()
             img_list = gr.State()
             chatbot = gr.Chatbot(label='MiniGPT-4')
-            text_input = gr.Textbox(label='User', placeholder='Please upload your image first', interactive=False)
-    
-    upload_button.click(upload_img, [image, text_input, chat_state], [image, text_input, upload_button, chat_state, img_list])
-    
+            text_input = gr.Textbox(label='User', placeholder='Please upload your image first')
+
+    upload_button.click(upload_img, [image, text_input, chat_state], [image, text_input, upload_button, chat_state, img_list], api_name="image_upload")
+
     text_input.submit(gradio_ask, [text_input, chatbot, chat_state], [text_input, chatbot, chat_state]).then(
         gradio_answer, [chatbot, chat_state, img_list, num_beams, temperature], [chatbot, chat_state, img_list]
     )
